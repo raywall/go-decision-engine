@@ -5,6 +5,7 @@ import (
 	"sync"
 
 	"github.com/raywall/go-decision-engine/decision/engine"
+	"github.com/raywall/go-decision-engine/decision/tags"
 )
 
 // DecisionRuleSet represents a collection of rules.
@@ -13,7 +14,7 @@ type DecisionRuleSet struct {
 }
 
 // EvaluateAll executes all rules concurrently.
-func (rs *DecisionRuleSet) EvaluateAll(ctx context.Context, input map[string]any) []engine.RuleResult {
+func (rs *DecisionRuleSet) EvaluateAll(ctx context.Context, input any) ([]engine.RuleResult, error) {
 	var wg sync.WaitGroup
 	results := make(chan engine.RuleResult, len(rs.Rules))
 
@@ -23,10 +24,15 @@ func (rs *DecisionRuleSet) EvaluateAll(ctx context.Context, input map[string]any
 	for _, rule := range rs.Rules {
 		wg.Add(1)
 
+		data, err := tags.ParseToMap(input, toAnySchema(rule.Schema))
+		if err != nil {
+			return nil, err
+		}
+
 		go func(r *DecisionRule) {
 			defer wg.Done()
 
-			res, err := r.Evaluate(ctx, input)
+			res, err := r.Evaluate(ctx, data)
 
 			select {
 			case results <- engine.RuleResult{
@@ -47,5 +53,5 @@ func (rs *DecisionRuleSet) EvaluateAll(ctx context.Context, input map[string]any
 		output = append(output, r)
 	}
 
-	return output
+	return output, nil
 }

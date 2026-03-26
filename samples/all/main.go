@@ -46,7 +46,7 @@ func main() {
 	fmt.Printf("Adult -> %v (err=%v)\n", res, err)
 
 	// =========================================================
-	// 🧪 Scenario 2 - Multiple Rules (RuleSet)
+	// Scenario 2 - Multiple Rules (RuleSet)
 	// =========================================================
 	fmt.Println("\n=== Scenario 2: Rule Set (Parallel Execution) ===")
 
@@ -64,14 +64,14 @@ func main() {
 		"score":   720,
 	}
 
-	results := rs.EvaluateAll(context.Background(), input2)
+	results, _ := rs.EvaluateAll(context.Background(), input2)
 
 	for _, r := range results {
 		fmt.Printf("%s -> %v (err=%v)\n", r.Name, r.Result, r.Error)
 	}
 
 	// =========================================================
-	// 🧪 Scenario 3 - Cache Demonstration
+	// Scenario 3 - Cache Demonstration
 	// =========================================================
 	fmt.Println("\n=== Scenario 3: Cache Reuse ===")
 
@@ -87,7 +87,7 @@ func main() {
 	fmt.Printf("Adult-Again -> %v (err=%v)\n", res, err)
 
 	// =========================================================
-	// 🧪 Scenario 4 - Timeout Handling
+	// Scenario 4 - Timeout Handling
 	// =========================================================
 	fmt.Println("\n=== Scenario 4: Context Timeout ===")
 
@@ -98,21 +98,21 @@ func main() {
 	fmt.Printf("Timeout result -> err=%v\n", err)
 
 	// =========================================================
-	// 🧪 Scenario 5 - Rule Set with Timeout
+	// Scenario 5 - Rule Set with Timeout
 	// =========================================================
 	fmt.Println("\n=== Scenario 5: Rule Set with Timeout ===")
 
 	ctxSetTimeout, cancelSetTimeout := context.WithTimeout(context.Background(), 1*time.Millisecond)
 	defer cancelSetTimeout()
 
-	results = rs.EvaluateAll(ctxSetTimeout, input2)
+	results, _ = rs.EvaluateAll(ctxSetTimeout, input2)
 
 	for _, r := range results {
 		fmt.Printf("%s -> %v (err=%v)\n", r.Name, r.Result, r.Error)
 	}
 
 	// =========================================================
-	// 🧪 Scenario 6 - Manual Cancel (Fail-Fast Simulation)
+	// Scenario 6 - Manual Cancel (Fail-Fast Simulation)
 	// =========================================================
 	fmt.Println("\n=== Scenario 6: Manual Cancel (Fail-Fast Simulation) ===")
 
@@ -123,14 +123,14 @@ func main() {
 		cancel()
 	}()
 
-	results = rs.EvaluateAll(ctxCancel, input2)
+	results, _ = rs.EvaluateAll(ctxCancel, input2)
 
 	for _, r := range results {
 		fmt.Printf("%s -> %v (err=%v)\n", r.Name, r.Result, r.Error)
 	}
 
 	// =========================================================
-	// 🧪 Scenario 7 - Invalid Input (Type Safety)
+	// Scenario 7 - Invalid Input (Type Safety)
 	// =========================================================
 	fmt.Println("\n=== Scenario 7: Invalid Input (Type Validation) ===")
 
@@ -144,7 +144,7 @@ func main() {
 	fmt.Printf("Invalid input -> %v (err=%v)\n", res, err)
 
 	// =========================================================
-	// 🧪 Scenario 8 - Complex Rule
+	// Scenario 8 - Complex Rule
 	// =========================================================
 	fmt.Println("\n=== Scenario 8: Complex Rule ===")
 

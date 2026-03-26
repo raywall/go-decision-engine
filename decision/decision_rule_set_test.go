@@ -6,7 +6,6 @@ import (
 
 	"github.com/raywall/go-decision-engine/decision"
 	"github.com/raywall/go-decision-engine/decision/engine"
-	"github.com/raywall/go-decision-engine/decision/tags"
 )
 
 func TestRuleSet(t *testing.T) {
@@ -29,8 +28,10 @@ func TestRuleSet(t *testing.T) {
 		"country": "BR",
 	}
 
-	results := rs.EvaluateAll(context.Background(), input)
-
+	results, err := rs.EvaluateAll(context.Background(), input)
+	if err != nil {
+		t.Fatal(err)
+	}
 	if len(results) != 2 {
 		t.Fatal("expected 2 results")
 	}
@@ -55,10 +56,10 @@ func TestRuleSetWithStructInput(t *testing.T) {
 
 	user := User{Age: 25}
 
-	data, _ := tags.ParseToMap(user, map[string]any{"age": nil})
-
-	results := rs.EvaluateAll(context.Background(), data)
-
+	results, err := rs.EvaluateAll(context.Background(), user)
+	if err != nil {
+		t.Fatal(err)
+	}
 	if !results[0].Result {
 		t.Fatal("expected true")
 	}
